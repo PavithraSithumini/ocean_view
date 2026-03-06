@@ -3,58 +3,42 @@ package com.oceanview.dao;
 import com.oceanview.model.Reservation;
 import com.oceanview.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.oceanview.util.DBConnection.getConnection;
+
 public class ReservationDAO {
 
+    // Add reservation
     public void addReservation(Reservation reservation) throws Exception {
+        try (Connection conn = getConnection()) {
 
-        Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO addreservation (guestName, address, contactNumber, roomType, checkIn, check_out, total_amount) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)"
+            );
 
-        // Get room_id from rooms table
-        PreparedStatement ps1 = conn.prepareStatement("SELECT room_id FROM rooms WHERE room_type=?");
-        ps1.setString(1, reservation.getRoomType());
-        ResultSet rs = ps1.executeQuery();
+            ps.setString(1, reservation.getGuestName());
+            ps.setString(2, reservation.getAddress());
+            ps.setString(3, reservation.getContactNumber());
+            ps.setString(4, reservation.getRoomType()); // store room_type as string
+            ps.setDate(5, Date.valueOf(reservation.getCheckIn()));
+            ps.setDate(6, Date.valueOf(reservation.getCheckOut()));
+            ps.setDouble(7, reservation.getTotalAmount());
 
-        int roomId = 0;
-        if (rs.next()) roomId = rs.getInt("room_id");
-
-        PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO addreservation (guestName,address,contactNumber,roomType,checkIn,check_out,total_amount) " +
-                        "VALUES (?,?,?,?,?,?,?)"
-        );
-
-        ps.setString(1, reservation.getGuestName());
-        ps.setString(2, reservation.getAddress());
-        ps.setString(3, reservation.getContactNumber());
-        ps.setInt(4, roomId);
-        ps.setDate(5, java.sql.Date.valueOf(reservation.getCheckIn()));
-        ps.setDate(6, java.sql.Date.valueOf(reservation.getCheckOut()));
-        ps.setDouble(7, reservation.getTotalAmount());
-
-        ps.executeUpdate();
-
-        // Close resources
-        ps.close();
-        rs.close();
-        ps1.close();
-        conn.close();
+            ps.executeUpdate();
+        }
     }
 
+    // Get all reservations
     public List<Reservation> getAllReservations() throws Exception {
         List<Reservation> list = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                     "SELECT r.idaddreservation, r.guestName, r.address, r.contactNumber, " +
-                             "rm.room_type, rm.price_per_night, r.checkIn, r.check_out, r.total_amount " +
-                             "FROM addreservation r " +
-                             "JOIN rooms rm ON r.roomType = rm.room_id"
+                     "SELECT * FROM addreservation"
              );
              ResultSet rs = ps.executeQuery()) {
 
@@ -64,7 +48,7 @@ public class ReservationDAO {
                 r.setGuestName(rs.getString("guestName"));
                 r.setAddress(rs.getString("address"));
                 r.setContactNumber(rs.getString("contactNumber"));
-                r.setRoomType(rs.getString("room_type"));
+                r.setRoomType(rs.getString("roomType"));
                 r.setCheckIn(rs.getDate("checkIn").toLocalDate());
                 r.setCheckOut(rs.getDate("check_out").toLocalDate());
                 r.setTotalAmount(rs.getDouble("total_amount"));
@@ -74,28 +58,12 @@ public class ReservationDAO {
         return list;
     }
 
-
-    public double getPricePerNight(String roomType) throws Exception {
-        double price = 0;
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT price_per_night FROM rooms WHERE room_type=?")) {
-            ps.setString(1, roomType);
-            try(ResultSet rs = ps.executeQuery()) {
-                if(rs.next()) price = rs.getDouble("price_per_night");
-                else throw new Exception("Room type not found.");
-            }
-        }
-        return price;
-    }
-
+    // Get reservation by ID
     public Reservation getReservationById(int reservationId) throws Exception {
         Reservation reservation = null;
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     "SELECT r.*, rm.room_type, rm.price_per_night  " +
-                             "FROM addreservation r JOIN rooms rm ON r.roomType = rm.room_id " +
-                             "WHERE r.idaddreservation = ?")) {
+        String sql = "SELECT * FROM addreservation WHERE idaddreservation=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, reservationId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -105,14 +73,43 @@ public class ReservationDAO {
                     reservation.setGuestName(rs.getString("guestName"));
                     reservation.setAddress(rs.getString("address"));
                     reservation.setContactNumber(rs.getString("contactNumber"));
-                    reservation.setRoomType(rs.getString("room_type")); // fetch room type from join
+                    reservation.setRoomType(rs.getString("roomType"));
                     reservation.setCheckIn(rs.getDate("checkIn").toLocalDate());
                     reservation.setCheckOut(rs.getDate("check_out").toLocalDate());
                     reservation.setTotalAmount(rs.getDouble("total_amount"));
                 }
             }
         }
-
         return reservation;
+    }
+
+    // Update reservation
+    public void updateReservation(Reservation r) throws Exception {
+        String sql = "UPDATE addreservation SET guestName=?, address=?, contactNumber=?, roomType=?, checkIn=?, check_out=?, total_amount=? " +
+                "WHERE idaddreservation=?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, r.getGuestName());
+            ps.setString(2, r.getAddress());
+            ps.setString(3, r.getContactNumber());
+            ps.setString(4, r.getRoomType());
+            ps.setDate(5, Date.valueOf(r.getCheckIn()));
+            ps.setDate(6, Date.valueOf(r.getCheckOut()));
+            ps.setDouble(7, r.getTotalAmount());
+            ps.setInt(8, r.getReservationId()); // use correct ID getter
+            ps.executeUpdate();
+        }
+    }
+
+    // Delete reservation
+    public void deleteReservation(int id) throws Exception {
+        String sql = "DELETE FROM addreservation WHERE idaddreservation=?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    public double getPricePerNight(String roomType) {
+        return 0;
     }
 }

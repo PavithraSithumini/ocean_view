@@ -9,11 +9,27 @@ public class Reservation {
     private String address;
     private String contactNumber;
     private String roomType;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
     private double totalAmount;
-    private LocalDate checkIn;   // Add this
-    private LocalDate checkOut;  // Add this
 
-    // Getters and setters
+    // Default constructor
+    public Reservation() {}
+
+    // Add this constructor
+    public Reservation(int reservationId, String guestName, String address, String contactNumber,
+                       String roomType, LocalDate checkIn, LocalDate checkOut, double totalAmount) {
+        this.reservationId = reservationId;
+        this.guestName = guestName;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.roomType = roomType;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.totalAmount = totalAmount;
+    }
+
+    // Getters and Setters
     public int getReservationId() { return reservationId; }
     public void setReservationId(int reservationId) { this.reservationId = reservationId; }
 
@@ -29,13 +45,12 @@ public class Reservation {
     public String getRoomType() { return roomType; }
     public void setRoomType(String roomType) { this.roomType = roomType; }
 
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
-
     public LocalDate getCheckIn() { return checkIn; }
     public void setCheckIn(LocalDate checkIn) { this.checkIn = checkIn; }
 
     public LocalDate getCheckOut() { return checkOut; }
     public void setCheckOut(LocalDate checkOut) { this.checkOut = checkOut; }
 
+    public double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
 }
