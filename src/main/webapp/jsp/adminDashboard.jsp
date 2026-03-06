@@ -1,10 +1,13 @@
 <%@ page session="true" %>
 <%@ page import="java.util.*" %>
 <%@ page isELIgnored="false" %>
+
+<c:import url="navbar.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
     <title>Ocean View Resort - Admin Dashboard</title>
+
     <style>
         /* General Body Styles */
         body {
@@ -90,7 +93,16 @@
 <!-- Navbar -->
 <div class="navbar">
     <h2>Ocean View Resort - admin Panel</h2>
-    <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Logout</a>
+    <%@ page session="true" %>
+    <%
+        if(session.getAttribute("user") == null){
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+    %>
+
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 </div>
 
 <!-- Main Container -->

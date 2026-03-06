@@ -98,7 +98,15 @@
 
 <div class="navbar">
     <h2>Ocean View Resort - Rooms</h2>
-    <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Logout</a>
+    <%@ page session="true" %>
+    <%
+        if(session.getAttribute("user") == null){
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+    %>
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 </div>
 
 <div class="container">

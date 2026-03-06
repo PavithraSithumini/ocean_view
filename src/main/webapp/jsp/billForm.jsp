@@ -12,6 +12,17 @@
 
     <title>Generate Bill</title>
 
+    <%@ page session="true" %>
+    <%
+        if(session.getAttribute("user") == null){
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+    %>
+
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
+
     <style>
 
         body{
@@ -74,21 +85,26 @@
         <label>Select Room</label>
         <select name="roomPrice" required>
 
-                <option value="">-- Select Room --</option>
-                <%
-                    try {
-                        RoomService roomService = new RoomService();
-                        List<Room> rooms = roomService.getAllRooms();
-                        for(Room r : rooms){
-                %>
-                <option value="<%= r.getRoomType() %>"><%= r.getRoomType() %> ($<%= r.getPricePerNight() %>)</option>
-                <%
-                        }
-                    } catch(Exception e){
+            <option value="">-- Select Room --</option>
 
+            <%
+                try {
+                    RoomService roomService = new RoomService();
+                    List<Room> rooms = roomService.getAllRooms();
+
+                    for(Room r : rooms){
+            %>
+
+            <option value="<%= r.getRoomType() %>">
+
+            <%
                     }
-                %>
-            </select>
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            %>
+
+        </select>
 
 
 

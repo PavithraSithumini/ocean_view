@@ -1,4 +1,11 @@
 <%@ page session="true" %>
+<%
+    if(session.getAttribute("user") == null){
+        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        return;
+    }
+%>
+<%@ page session="true" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page session="true" %>
 <!DOCTYPE html>
@@ -117,7 +124,7 @@
 
 <div class="navbar">
     <h2>Ocean View Resort - Add Room</h2>
-    <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Logout</a>
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 </div>
 
 <div class="container">

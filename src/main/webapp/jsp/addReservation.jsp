@@ -1,3 +1,11 @@
+<%@ page session="true" %>
+<%
+    if(session.getAttribute("user") == null){
+        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        return;
+    }
+%>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.oceanview.model.Room" %>
 <%@ page import="com.oceanview.service.RoomService" %>
@@ -20,6 +28,8 @@
 <body>
 <div class="container">
     <h2>Add Reservation</h2>
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 
     <% if(request.getParameter("success") != null){ %>
     <p class="success"><%= request.getParameter("success") %></p>
