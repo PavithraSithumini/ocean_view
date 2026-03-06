@@ -1,86 +1,54 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.*,com.oceanview.model.Room" %>
+<%@ page import="com.oceanview.service.RoomService" %>
+
+<%
+    List<Room> roomList = (List<Room>) request.getAttribute("roomList");
+%>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Generate Bill - Ocean View Resort</title>
+
+    <title>Generate Bill</title>
 
     <style>
 
         body{
-            margin:0;
-            font-family:Arial, Helvetica, sans-serif;
-            background:linear-gradient(to right,#0077b6,#00b4d8);
+            font-family: Arial;
+            background: linear-gradient(to right,#0077b6,#00b4d8);
         }
-
-        /* NAVBAR */
-
-        .navbar{
-            background:#023e8a;
-            color:white;
-            padding:15px 30px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-        }
-
-        .navbar h2{
-            margin:0;
-        }
-
-        .back-btn{
-            background:#e63946;
-            color:white;
-            padding:8px 15px;
-            text-decoration:none;
-            border-radius:5px;
-        }
-
-        .back-btn:hover{
-            background:#b5172e;
-        }
-
-        /* FORM CONTAINER */
 
         .container{
             width:420px;
-            margin:60px auto;
+            margin:80px auto;
             background:white;
-            padding:35px;
-            border-radius:12px;
-            box-shadow:0 5px 20px rgba(0,0,0,0.3);
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 15px rgba(0,0,0,0.2);
         }
 
-        .container h2{
+        h2{
             text-align:center;
-            color:#0077b6;
+            color:#023e8a;
         }
 
-        /* INPUTS */
-
-        label{
-            font-weight:bold;
-        }
-
-        input{
+        input,select{
             width:100%;
             padding:10px;
-            margin-top:5px;
-            margin-bottom:18px;
-            border-radius:6px;
+            margin:10px 0;
             border:1px solid #ccc;
+            border-radius:5px;
         }
-
-        /* BUTTON */
 
         button{
             width:100%;
             padding:12px;
-            border:none;
             background:#0077b6;
             color:white;
+            border:none;
+            border-radius:5px;
             font-size:16px;
-            border-radius:6px;
             cursor:pointer;
         }
 
@@ -94,31 +62,43 @@
 
 <body>
 
-<div class="navbar">
-    <h2>Ocean View Resort - Generate Bill</h2>
-    <a href="adminDashboard.jsp" class="back-btn">Back</a>
-</div>
-
 <div class="container">
 
-    <h2>Bill Calculation</h2>
+    <h2>Generate Bill</h2>
 
-
-    <form action="<%= request.getContextPath() %>/calculateBill" method="post">
-
+    <form action="<%=request.getContextPath()%>/calculateBill" method="post">
 
         <label>Reservation ID</label>
         <input type="number" name="reservationId" required>
 
+        <label>Select Room</label>
+        <select name="roomPrice" required>
+
+                <option value="">-- Select Room --</option>
+                <%
+                    try {
+                        RoomService roomService = new RoomService();
+                        List<Room> rooms = roomService.getAllRooms();
+                        for(Room r : rooms){
+                %>
+                <option value="<%= r.getRoomType() %>"><%= r.getRoomType() %> ($<%= r.getPricePerNight() %>)</option>
+                <%
+                        }
+                    } catch(Exception e){
+
+                    }
+                %>
+            </select>
+
+
+
+
+
+
         <label>Nights</label>
         <input type="number" name="nights" required>
 
-        <label>Room Price</label>
-        <input type="number" name="roomPrice" step="0.01" required>
-
         <button type="submit">Generate Bill</button>
-        <a href="<%= request.getContextPath() %>/bill">Generate Bill</a>
-
 
     </form>
 
