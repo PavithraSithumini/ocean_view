@@ -103,7 +103,9 @@
 
     <h2>Bill Calculation</h2>
 
-    <form action="${pageContext.request.contextPath}/bill" method="post">
+
+    <form action="<%= request.getContextPath() %>/calculateBill" method="post">
+
 
         <label>Reservation ID</label>
         <input type="number" name="reservationId" required>
@@ -115,6 +117,7 @@
         <input type="number" name="roomPrice" step="0.01" required>
 
         <button type="submit">Generate Bill</button>
+        <a href="<%= request.getContextPath() %>/bill">Generate Bill</a>
 
 
     </form>

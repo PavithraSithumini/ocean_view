@@ -10,16 +10,6 @@ public class ReservationService {
     private ReservationDAO reservationDAO = new ReservationDAO();
 
     public List<Reservation> getAllReservations() throws Exception {
-
         return reservationDAO.getAllReservations();
-
-    }
-
-    public Reservation getReservationById(int reservationId) {
-        return null;
-    }
-
-    public double calculateTotalBill(int reservationId) {
-        return 0;
     }
 }

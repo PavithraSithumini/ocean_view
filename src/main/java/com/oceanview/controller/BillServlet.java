@@ -3,33 +3,32 @@ package com.oceanview.controller;
 import com.oceanview.model.Bill;
 import com.oceanview.service.BillService;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+import javax.servlet.*;
 import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 
-@WebServlet("/billFrom")
+@WebServlet("/calculateBill")
 public class BillServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-
             int reservationId = Integer.parseInt(request.getParameter("reservationId"));
-            int nights = Integer.parseInt(request.getParameter("nights"));
-            double roomPrice = Double.parseDouble(request.getParameter("roomPrice"));
 
             BillService service = new BillService();
-
-            Bill bill = service.calculateBill(reservationId, nights, roomPrice);
+            Bill bill = service.generateBill(reservationId);
 
             request.setAttribute("bill", bill);
+            RequestDispatcher rd = request.getRequestDispatcher("/jsp/bill.jsp");
+            rd.forward(request, response);
 
-            request.getRequestDispatcher("/jsp/billForm.jsp").forward(request, response);
-
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
+            response.getWriter().println("Error: " + e.getMessage());
         }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendRedirect(request.getContextPath() + "/addReservation.jsp");
     }
 }

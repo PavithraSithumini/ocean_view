@@ -10,70 +10,32 @@ public class Reservation {
     private String contactNumber;
     private String roomType;
     private double totalAmount;
+    private LocalDate checkIn;   // Add this
+    private LocalDate checkOut;  // Add this
 
-    public int getReservationId() {
-        return reservationId;
-    }
+    // Getters and setters
+    public int getReservationId() { return reservationId; }
+    public void setReservationId(int reservationId) { this.reservationId = reservationId; }
 
-    public void setReservationId(int reservationId) {
-        this.reservationId = reservationId;
-    }
+    public String getGuestName() { return guestName; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
 
-    public String getGuestName() {
-        return guestName;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
-    }
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getRoomType() { return roomType; }
+    public void setRoomType(String roomType) { this.roomType = roomType; }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
 
-    public String getContactNumber() {
-        return contactNumber;
-    }
+    public LocalDate getCheckIn() { return checkIn; }
+    public void setCheckIn(LocalDate checkIn) { this.checkIn = checkIn; }
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public String getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public void setCheckOut(LocalDate checkOut) {
-    }
-
-    public void setCheckIn(LocalDate checkIn) {
-    }
-
-    public LocalDate getCheckIn() {
-        return null;
-    }
-
-    public LocalDate getCheckOut() {
-
-
-        return null;
-    }
-
+    public LocalDate getCheckOut() { return checkOut; }
+    public void setCheckOut(LocalDate checkOut) { this.checkOut = checkOut; }
 
 }

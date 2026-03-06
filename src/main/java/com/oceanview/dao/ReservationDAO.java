@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservationDAO {
 
@@ -24,7 +26,7 @@ public class ReservationDAO {
         if (rs.next()) roomId = rs.getInt("room_id");
 
         PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO reservations (guest_name,address,contact_number,room_id,check_in,check_out,total_amount) " +
+                "INSERT INTO addreservation (guestName,address,contactNumber,roomType,checkIn,check_out,total_amount) " +
                         "VALUES (?,?,?,?,?,?,?)"
         );
 
@@ -45,7 +47,72 @@ public class ReservationDAO {
         conn.close();
     }
 
-    public List<Reservation> getAllReservations() {
-        return List.of();
+    public List<Reservation> getAllReservations() throws Exception {
+        List<Reservation> list = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT r.idaddreservation, r.guestName, r.address, r.contactNumber, " +
+                             "rm.room_type, rm.price_per_night, r.checkIn, r.check_out, r.total_amount " +
+                             "FROM addreservation r " +
+                             "JOIN rooms rm ON r.roomType = rm.room_id"
+             );
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Reservation r = new Reservation();
+                r.setReservationId(rs.getInt("idaddreservation"));
+                r.setGuestName(rs.getString("guestName"));
+                r.setAddress(rs.getString("address"));
+                r.setContactNumber(rs.getString("contactNumber"));
+                r.setRoomType(rs.getString("room_type"));
+                r.setCheckIn(rs.getDate("checkIn").toLocalDate());
+                r.setCheckOut(rs.getDate("check_out").toLocalDate());
+                r.setTotalAmount(rs.getDouble("total_amount"));
+                list.add(r);
+            }
+        }
+        return list;
+    }
+
+
+    public double getPricePerNight(String roomType) throws Exception {
+        double price = 0;
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT price_per_night FROM rooms WHERE room_type=?")) {
+            ps.setString(1, roomType);
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) price = rs.getDouble("price_per_night");
+                else throw new Exception("Room type not found.");
+            }
+        }
+        return price;
+    }
+
+    public Reservation getReservationById(int reservationId) throws Exception {
+        Reservation reservation = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT r.*, rm.room_type, rm.price_per_night " +
+                             "FROM reservations r JOIN rooms rm ON r.roomType = rm.room_id " +
+                             "WHERE r.idaddreservation = ?")) {
+
+            ps.setInt(1, reservationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    reservation = new Reservation();
+                    reservation.setReservationId(rs.getInt("idaddreservation"));
+                    reservation.setGuestName(rs.getString("guestName"));
+                    reservation.setAddress(rs.getString("address"));
+                    reservation.setContactNumber(rs.getString("contactNumber"));
+                    reservation.setRoomType(rs.getString("room_type")); // fetch room type from join
+                    reservation.setCheckIn(rs.getDate("checkIn").toLocalDate());
+                    reservation.setCheckOut(rs.getDate("check_out").toLocalDate());
+                    reservation.setTotalAmount(rs.getDouble("total_amount"));
+                }
+            }
+        }
+
+        return reservation;
     }
 }
