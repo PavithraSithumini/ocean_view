@@ -1,5 +1,6 @@
 <%@ page session="true" %>
 <%@ page import="java.util.*" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,19 +102,34 @@
     <!-- Dashboard Cards -->
     <div class="card-container">
 
-        <div class="card">
-            <h3>Add Reservation</h3>
-            <a href="addReservation.jsp">Open</a>
-        </div>
+        <div class="card-container">
 
-        <div class="card">
-            <h3>View Reservations</h3>
-            <a href="viewReservations.jsp">Open</a>
+            <div class="card">
+                <h3>Add Reservation</h3>
+                <a href="<%= request.getContextPath() %>/jsp/addReservation.jsp">Open</a>
+            </div>
+
+            <div class="card">
+                <h3>View Reservations</h3>
+                <a href="${pageContext.request.contextPath}/viewReservations">Open</a>
+            </div>
+
+            <div class="card">
+                <h3>Add Room</h3>
+                <a href="${pageContext.request.contextPath}/addRoom">Open</a>
+            </div>
+
+            <div class="card">
+                <h3>View Rooms</h3>
+                <a href="${pageContext.request.contextPath}/viewRooms">Open</a>
+            </div>
+
         </div>
 
         <div class="card">
             <h3>Calculate Bill</h3>
-            <a href="bill.jsp">Open</a>
+
+            <a href="${pageContext.request.contextPath}/jsp/billForm.jsp.jsp">Create Bill</a>
         </div>
 
         <div class="card">

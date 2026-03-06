@@ -40,6 +40,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("jsp/adminDashboard.jsp");
             } else if (role.equals("STAFF")) {
                 response.sendRedirect("jsp/staffDashboard.jsp");
+
             }
 
         } else {
