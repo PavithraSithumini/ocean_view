@@ -142,7 +142,10 @@
             <% if ("admin".equalsIgnoreCase(role)) { %>
             <td>
                 <a href="<%= request.getContextPath() %>/deleteRoom?roomId=<%= r.getRoomId() %>"
-                   class="delete-btn">Delete</a>
+                   class="delete-btn"
+                   onclick="return confirm('Are you sure you want to delete this room?');">
+                    Delete
+                </a>
             </td>
             <% } %>
         </tr>
