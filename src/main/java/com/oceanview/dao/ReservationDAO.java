@@ -93,8 +93,8 @@ public class ReservationDAO {
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                     "SELECT r.*, rm.room_type, rm.price_per_night " +
-                             "FROM reservations r JOIN rooms rm ON r.roomType = rm.room_id " +
+                     "SELECT r.*, rm.room_type, rm.price_per_night  " +
+                             "FROM addreservation r JOIN rooms rm ON r.roomType = rm.room_id " +
                              "WHERE r.idaddreservation = ?")) {
 
             ps.setInt(1, reservationId);
