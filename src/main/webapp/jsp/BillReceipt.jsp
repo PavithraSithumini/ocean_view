@@ -11,70 +11,45 @@
     <title>Bill Receipt</title>
 
     <style>
-
         body{
-            font-family: Arial;
-            background:#eef2f7;
+            font-family:Arial;
+            background:#f4f6f9;
         }
 
-        .receipt-box{
-            width:600px;
+        .container{
+            width:500px;
             margin:50px auto;
             background:white;
             padding:30px;
             border-radius:10px;
-            box-shadow:0 0 15px rgba(0,0,0,0.15);
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
         }
 
-        .header{
+        h2{
             text-align:center;
-        }
-
-        .header h2{
-            margin:0;
             color:#023e8a;
-        }
-
-        .line{
-            border-bottom:2px dashed #ccc;
-            margin:15px 0;
         }
 
         .row{
             display:flex;
             justify-content:space-between;
             margin:10px 0;
-            font-size:16px;
         }
 
         .total{
-            font-weight:bold;
             font-size:20px;
+            font-weight:bold;
             color:#0077b6;
         }
 
-        .btn{
-            margin-top:20px;
-            padding:12px;
+        button{
             width:100%;
-            border:none;
+            padding:10px;
             background:#0077b6;
             color:white;
-            font-size:16px;
+            border:none;
             border-radius:5px;
             cursor:pointer;
-        }
-
-        .btn:hover{
-            background:#023e8a;
-        }
-
-        /* Print Style */
-
-        @media print{
-            .btn{
-                display:none;
-            }
         }
 
     </style>
@@ -89,16 +64,22 @@
 
 <body>
 
-<div class="receipt-box">
+<div class="container">
 
-    <div class="header">
-        <h2>Ocean View Resort</h2>
-        <p>Galle, Sri Lanka</p>
-    </div>
+    <h2>Ocean View Resort</h2>
 
-    <div class="line"></div>
+    <%@ page session="true" %>
+    <%
+        if(session.getAttribute("user") == null){
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+    %>
 
-    <% if(bill != null){ %>
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
+
+    <hr>
 
     <div class="row">
         <span>Reservation ID</span>
@@ -110,25 +91,16 @@
         <span><%= bill.getNights() %></span>
     </div>
 
-    <div class="row">
-        <span>Room Price</span>
-        <span>$<%= bill.getRoomPrice() %></span>
-    </div>
 
-    <div class="line"></div>
+
+    <hr>
 
     <div class="row total">
-        <span>Total Amount</span>
+        <span>Total</span>
         <span>$<%= bill.getTotal() %></span>
     </div>
 
-    <button class="btn" onclick="printReceipt()">Print Receipt</button>
-
-    <% } else { %>
-
-    <h3 style="color:red;text-align:center;">No bill found.</h3>
-
-    <% } %>
+    <button onclick="printReceipt()">Print Receipt</button>
 
 </div>
 

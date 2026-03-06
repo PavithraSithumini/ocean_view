@@ -10,6 +10,17 @@
 <html>
 <head>
     <title>View Reservations</title>
+
+    <%@ page session="true" %>
+    <%
+        if(session.getAttribute("user") == null){
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+    %>
+
+
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
     <style>
         body { font-family: Arial; background: #f4f6f9; }
         table { width: 90%; margin: 30px auto; border-collapse: collapse; background: white; }

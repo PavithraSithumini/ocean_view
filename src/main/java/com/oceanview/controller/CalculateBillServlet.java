@@ -15,30 +15,44 @@ public class CalculateBillServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+            String resIdStr = request.getParameter("idaddreservation");
+            String roomPriceStr = request.getParameter("roomPrice");
+            String nightsStr = request.getParameter("nights");
 
-            int reservationId = Integer.parseInt(request.getParameter("idaddreservation"));
-            int nights = Integer.parseInt(request.getParameter("nights"));
-            double roomPrice = Double.parseDouble(request.getParameter("roomPrice"));
+            // Validate null or empty
+            if(resIdStr == null || roomPriceStr == null || nightsStr == null ||
+                    resIdStr.isEmpty() || roomPriceStr.isEmpty() || nightsStr.isEmpty()) {
 
-            BillService service = new BillService();
+                request.setAttribute("error", "All fields are required!");
+                request.getRequestDispatcher("/jsp/billForm.jsp").forward(request, response);
+                return;
+            }
 
-            Bill bill = service.calculateBill(reservationId, nights, roomPrice);
+            int reservationId = Integer.parseInt(resIdStr);
+            double roomPrice = Double.parseDouble(roomPriceStr); // Must be numeric
+            int nights = Integer.parseInt(nightsStr);
 
+            // Calculate total
+            double roomCharge = roomPrice * nights;
+            double serviceCharge = roomCharge * 0.05; // 5%
+            double tax = roomCharge * 0.1; // 10%
+            double total = roomCharge + serviceCharge + tax;
+
+            // Create Bill object
+            Bill bill = new Bill();
+            bill.setReservationId(reservationId);
+            bill.setNights(nights);
+            bill.setTotal(total);
+
+
+            // Forward to receipt
             request.setAttribute("bill", bill);
+            request.getRequestDispatcher("/jsp/billReceipt.jsp").forward(request, response);
 
-            RequestDispatcher rd = request.getRequestDispatcher("/jsp/billReceipt.jsp");
-            rd.forward(request, response);
-
-        } catch (Exception e) {
-
+        } catch(Exception e) {
             e.printStackTrace();
-
+            request.setAttribute("error", "Error generating bill: " + e.getMessage());
+            request.getRequestDispatcher("/jsp/billForm.jsp").forward(request, response);
         }
-        int reservationId = Integer.parseInt(request.getParameter("idaddreservation"));
-        int nights = Integer.parseInt(request.getParameter("nights"));
-
-        double roomPrice = Double.parseDouble(request.getParameter("roomPrice"));
-
-        double total = roomPrice * nights;
     }
 }
