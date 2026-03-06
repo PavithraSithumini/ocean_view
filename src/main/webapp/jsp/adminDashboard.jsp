@@ -1,156 +1,167 @@
 <%@ page session="true" %>
-<%@ page import="java.util.*" %>
-<%@ page isELIgnored="false" %>
+<%
+    if(session.getAttribute("user") == null){
+        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        return;
+    }
+%>
 
-<c:import url="navbar.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ocean View Resort - Admin Dashboard</title>
+
+    <title>Ocean View Resort Dashboard</title>
 
     <style>
-        /* General Body Styles */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #0077b6, #00b4d8);
+
+        body{
+            margin:0;
+            font-family:Arial;
+
+            background:linear-gradient(to right,#0077b6,#00b4d8);
         }
 
-        /* Navbar Styles */
-        .navbar {
-            background-color: #023e8a;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar h2 {
-            margin: 0;
-        }
-        .logout-btn {
-            background: #e63946;
-            color: white;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .logout-btn:hover {
-            background: #b5172e;
+        /* welcome section */
+
+        .hero{
+
+            text-align:center;
+            color:white;
+
+            padding:100px 20px;
         }
 
-        /* Main Container */
-        .container {
-            padding: 40px;
-            text-align: center;
-        }
-        .welcome {
-            font-size: 22px;
-            color: white;
-            margin-bottom: 30px;
+        .hero h1{
+            font-size:45px;
         }
 
-        /* Card Container */
-        .card-container {
+        .hero p{
+            font-size:18px;
+            margin-top:10px;
+        }
+
+        /* info boxes */
+
+        .info-section{
+
+            display:flex;
+            justify-content:center;
+            gap:40px;
+
+            margin-top:40px;
+        }
+
+        .box{
+
+            background:white;
+            padding:30px;
+            width:220px;
+
+            border-radius:12px;
+
+            text-align:center;
+
+            box-shadow:0 5px 20px rgba(0,0,0,0.2);
+
+            transition:0.3s;
+        }
+
+        .box:hover{
+            transform:translateY(-10px);
+        }
+
+        .box h3{
+            color:#0077b6;
+        }
+        /* Info boxes (cards) */
+        .info-boxes {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 30px;
         }
 
-        /* Individual Card Styles */
-        .card {
-            background: white;
+        .info-box {
+            background-color: #fff;
             width: 220px;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: 0.3s;
-            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card:hover {
-            transform: translateY(-10px);
+        .info-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
-        .card h3 {
-            margin-bottom: 15px;
-            color: #0077b6;
+
+        .info-box h2 {
+            font-size: 40px;
+            color: #ff6f61;
+            margin: 0;
         }
-        .card a {
-            text-decoration: none;
-            color: white;
-            background: #0077b6;
-            padding: 8px 15px;
-            border-radius: 5px;
-            display: inline-block;
+
+        .info-box p {
+            font-size: 16px;
+            color: #555;
+            margin-top: 10px;
         }
-        .card a:hover {
-            background: #023e8a;
+
+        @media(max-width: 900px){
+            .info-boxes {
+                flex-direction: column;
+                align-items: center;
+            }
         }
+
     </style>
+
 </head>
+
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-    <h2>Ocean View Resort - admin Panel</h2>
-    <%@ page session="true" %>
-    <%
-        if(session.getAttribute("user") == null){
-            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
-            return;
-        }
-    %>
+<!-- NAVBAR -->
+<%@ include file="navbar.jsp" %>
 
+<!-- WELCOME HERO -->
 
-    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
+<div class="hero">
+
+    <h1>Welcome <%=session.getAttribute("user")%> 👋</h1>
+
+    <p>You are logged in as <b><%=session.getAttribute("role")%></b></p>
+
+    <p>Manage reservations, rooms and billing easily with the Ocean View Resort system.</p>
+
 </div>
 
-<!-- Main Container -->
-<div class="container">
-    <div class="welcome">
-        Welcome Staff: <b><%= session.getAttribute("user") %></b>
+
+<!-- SMALL INFO SECTION -->
+
+<div class="info-section">
+
+    <div class="info-boxes">
+        <div class="info-box">
+            <h2>80</h2>
+            <p>Total Rooms</p>
+        </div>
+        <div class="info-box">
+            <h2>50</h2>
+            <p>Available Rooms</p>
+        </div>
+        <div class="info-box">
+            <h2>0</h2>
+            <p>Today's Check-ins</p>
+        </div>
+        <div class="info-box">
+            <h2>0</h2>
+            <p>Today's Check-outs</p>
+        </div>
+
+
     </div>
 
-    <!-- Dashboard Cards -->
-    <div class="card-container">
-
-        <div class="card-container">
-
-            <div class="card">
-                <h3>Add Reservation</h3>
-                <a href="<%= request.getContextPath() %>/jsp/addReservation.jsp">Open</a>
-            </div>
-
-            <div class="card">
-                <h3>View Reservations</h3>
-                <a href="${pageContext.request.contextPath}/viewReservations">Open</a>
-            </div>
-
-            <div class="card">
-                <h3>Add Room</h3>
-                <a href="${pageContext.request.contextPath}/addRoom">Open</a>
-            </div>
-
-            <div class="card">
-                <h3>View Rooms</h3>
-                <a href="${pageContext.request.contextPath}/viewRooms">Open</a>
-            </div>
-
-        </div>
-
-        <div class="card">
-            <h3>Calculate Bill</h3>
-
-            <a href="${pageContext.request.contextPath}/jsp/billForm.jsp">Create Bill</a>
-        </div>
-
-        <div class="card">
-            <h3>Help</h3>
-            <a href="help.jsp">Open</a>
-        </div>
-
-    </div>
 </div>
+
 
 </body>
 </html>
