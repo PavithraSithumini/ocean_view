@@ -123,12 +123,12 @@
 
         <div class="card">
             <h3>View Rooms</h3>
-            <a href="${pageContext.request.contextPath}/viewRooms">Open</a>
+            <a href="<%= request.getContextPath() %>/viewRooms">Open</a>
         </div>
 
         <div class="card">
             <h3>Calculate Bill</h3>
-            <a href="<%= request.getContextPath() %>/jsp/calculateBill.jsp.jsp">Open</a>
+            <a href="<%= request.getContextPath() %>/jsp/billForm.jsp">Open</a>
         </div>
 
         <div class="card">

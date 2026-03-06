@@ -1,39 +1,44 @@
 package com.oceanview.service;
 
 import com.oceanview.dao.BillDAO;
+import com.oceanview.dao.ReservationDAO;
 import com.oceanview.model.Bill;
-import com.oceanview.model.Payment;
+import com.oceanview.model.Reservation;
 
 public class BillService {
 
-    public Bill calculateBill(int reservationId, int nights, double roomPrice) throws Exception {
+    private ReservationDAO reservationDAO = new ReservationDAO();
+    private BillDAO billDAO = new BillDAO();
 
-        double roomCharge = nights * roomPrice;
-        double serviceCharge = roomCharge * 0.10;
-        double tax = roomCharge * 0.05;
+    public Bill generateBill(int reservationId) throws Exception {
+
+        // Fetch reservation
+        Reservation res = reservationDAO.getReservationById(reservationId);
+        if(res == null) throw new Exception("Reservation not found!");
+
+        // Calculate nights
+        int nights = (int) java.time.temporal.ChronoUnit.DAYS.between(res.getCheckIn(), res.getCheckOut());
+
+        // Get price from database
+        double pricePerNight = reservationDAO.getPricePerNight(res.getRoomType());
+
+        // Calculate bill
+        double roomCharge = pricePerNight * nights;
+        double serviceCharge = roomCharge * 0.10; // 10%
+        double tax = roomCharge * 0.05; // 5%
         double total = roomCharge + serviceCharge + tax;
 
-        // create Bill object
         Bill bill = new Bill();
         bill.setReservationId(reservationId);
         bill.setNights(nights);
-        bill.setRoomPrice(roomPrice);
+        bill.setRoomPrice(pricePerNight);
         bill.setRoomCharge(roomCharge);
         bill.setServiceCharge(serviceCharge);
         bill.setTax(tax);
         bill.setTotal(total);
 
-        // create Payment object
-        Payment payment = new Payment();
-        payment.setReservationId(reservationId);
-        payment.setRoomCharge(roomCharge);
-        payment.setServiceCharge(serviceCharge);
-        payment.setTax(tax);
-        payment.setTotalAmount(total);
-
-        // save payment
-        BillDAO dao = new BillDAO();
-        dao.savePayment(payment);
+        // Save payment
+        billDAO.savePayment(bill, reservationId);
 
         return bill;
     }

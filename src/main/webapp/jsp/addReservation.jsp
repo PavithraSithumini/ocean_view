@@ -1,104 +1,31 @@
-<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
-<%@ page session="true" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="com.oceanview.model.Room" %>
+<%@ page import="com.oceanview.service.RoomService" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add Reservation - Ocean View Resort</title>
-
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #0077b6, #00b4d8);
-        }
-
-        .navbar {
-            background-color: #023e8a;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar h2 {
-            margin: 0;
-        }
-
-        .back-btn {
-            background: #e63946;
-            color: white;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .back-btn:hover {
-            background: #b5172e;
-        }
-
-        .container {
-            width: 450px;
-            margin: 50px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            text-align: center;
-            color: #0077b6;
-            margin-bottom: 20px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        input[type="submit"] {
-            background: #0077b6;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        input[type="submit"]:hover {
-            background: #023e8a;
-        }
-
-        .message {
-            text-align: center;
-            color: green;
-            font-weight: bold;
-        }
-
+        body { font-family: Arial; background: linear-gradient(to right,#0077b6,#00b4d8); margin:0; }
+        .container { width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
+        h2 { text-align:center; color:#0077b6; }
+        label { font-weight:bold; }
+        input, select { width:100%; padding:10px; margin-bottom:18px; border-radius:6px; border:1px solid #ccc; }
+        button { width:100%; padding:12px; border:none; background:#0077b6; color:white; border-radius:6px; font-size:16px; cursor:pointer; }
+        button:hover { background:#023e8a; }
+        .success { color:green; text-align:center; margin-bottom:15px; }
     </style>
 </head>
 <body>
-
-<div class="navbar">
-    <h2>Ocean View Resort - Add Reservation</h2>
-    <a href="adminDashboard.jsp" class="back-btn">Back</a>
-</div>
-
 <div class="container">
+    <h2>Add Reservation</h2>
 
-    <h2>New Reservation</h2>
-
-    <% if(request.getAttribute("success") != null) { %>
-    <div class="message">
-        <%= request.getAttribute("success") %>
-    </div>
+    <% if(request.getParameter("success") != null){ %>
+    <p class="success"><%= request.getParameter("success") %></p>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/addReservation" method="post">
-
+    <form action="<%=request.getContextPath()%>/AddReservationServlet" method="post">
         <label>Guest Name</label>
         <input type="text" name="guestName" required>
 
@@ -106,27 +33,34 @@
         <input type="text" name="address" required>
 
         <label>Contact Number</label>
-        <input type="text" name="contactNumber" required pattern="[0-9]{10}" title="Enter 10 digit number">
+        <input type="text" name="contactNumber" required>
 
         <label>Room Type</label>
         <select name="roomType" required>
-            <option value="">Select Room Type</option>
-            <option value="Single">Single - $50 per night</option>
-            <option value="Double">Double - $80 per night</option>
-            <option value="Suite">Suite - $120 per night</option>
+            <option value="">-- Select Room --</option>
+            <%
+                try {
+                    RoomService roomService = new RoomService();
+                    List<Room> rooms = roomService.getAllRooms();
+                    for(Room r : rooms){
+            %>
+            <option value="<%= r.getRoomType() %>"><%= r.getRoomType() %> ($<%= r.getPricePerNight() %>)</option>
+            <%
+                    }
+                } catch(Exception e){
+
+                }
+            %>
         </select>
 
-        <label>Check-In Date</label>
+        <label>Check-in Date</label>
         <input type="date" name="checkIn" required>
 
-        <label>Check-Out Date</label>
+        <label>Check-out Date</label>
         <input type="date" name="checkOut" required>
 
-        <input type="submit" value="Add Reservation">
-
+        <button type="submit">Add Reservation</button>
     </form>
-
 </div>
-
 </body>
 </html>

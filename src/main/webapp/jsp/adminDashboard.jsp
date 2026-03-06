@@ -129,7 +129,7 @@
         <div class="card">
             <h3>Calculate Bill</h3>
 
-            <a href="${pageContext.request.contextPath}/jsp/billForm.jsp.jsp">Create Bill</a>
+            <a href="${pageContext.request.contextPath}/jsp/billForm.jsp">Create Bill</a>
         </div>
 
         <div class="card">
