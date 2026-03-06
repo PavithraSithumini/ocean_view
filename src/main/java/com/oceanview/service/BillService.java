@@ -1,19 +1,40 @@
 package com.oceanview.service;
 
-import com.oceanview.dao.BillDAO;
+import com.oceanview.dao.ReservationDAO;
+import com.oceanview.dao.RoomDAO;
 import com.oceanview.model.Bill;
+import com.oceanview.model.Reservation;
+import com.oceanview.model.Room;
 
 public class BillService {
 
-    public Bill calculateBill(int reservationId, int nights, double roomPrice) throws Exception {
+    public Bill generateBill(int reservationId, String roomType, int nights) throws Exception {
+        // Get reservation details
+        ReservationDAO reservationDAO = new ReservationDAO();
+        Reservation reservation = reservationDAO.getReservationById(reservationId);
+        if(reservation == null) {
+            throw new Exception("Reservation not found.");
+        }
 
-        double total = nights * roomPrice;
+        // Get room price
+        RoomDAO roomDAO = new RoomDAO();
+        double price = 0;
+        for(Room r : roomDAO.getAllRooms()) {
+            if(r.getRoomType().equalsIgnoreCase(roomType)) {
+                price = r.getPricePerNight();
+                break;
+            }
+        }
 
-        Bill bill = new Bill(reservationId, nights, roomPrice, total);
+        if(price == 0) {
+            throw new Exception("Room type not found.");
+        }
 
-        BillDAO dao = new BillDAO();
-        dao.saveBill(bill);
-
-        return bill;
+        // Create Bill object
+        return new Bill(reservation.getReservationId(),
+                reservation.getGuestName(),
+                roomType,
+                price,
+                nights);
     }
 }
