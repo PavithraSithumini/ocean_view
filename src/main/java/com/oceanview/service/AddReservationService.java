@@ -14,6 +14,11 @@ public class AddReservationService {
         reservationDAO = new ReservationDAO();
     }
 
+    public AddReservationService(ReservationDAO reservationDAO) {
+        this.reservationDAO = reservationDAO;
+    }
+
+
     public void addReservation(Reservation reservation, String checkInStr, String checkOutStr) throws Exception {
         LocalDate checkIn = LocalDate.parse(checkInStr);
         LocalDate checkOut = LocalDate.parse(checkOutStr);
@@ -31,6 +36,7 @@ public class AddReservationService {
 
         reservationDAO.addReservation(reservation);
     }
+
 
 
 }
