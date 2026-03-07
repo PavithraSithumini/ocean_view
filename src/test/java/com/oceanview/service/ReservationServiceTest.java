@@ -77,7 +77,7 @@ class ReservationServiceTest {
         assertEquals(2, result.size(),"Must return exactly 2 reservations");
 
         // ASSERT — first reservation fields match your model
-        assertEquals(2,             result.get(0).getReservationId(), "First ID must be 1");
+        assertEquals(1,             result.get(0).getReservationId(), "First ID must be 1");
         assertEquals("Kamal Perera",result.get(0).getGuestName(),     "First guest must be Kamal Perera");
         assertEquals("Deluxe",      result.get(0).getRoomType(),      "First room type must be Deluxe");
         assertEquals(600.0,         result.get(0).getTotalAmount(),   "First total must be 600.0");
