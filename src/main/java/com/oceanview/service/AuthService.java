@@ -4,9 +4,19 @@ import com.oceanview.dao.UserDAO;
 
 public class AuthService {
 
-    public String login(String username, String password) {
+    private final UserDAO userDAO;
 
-        UserDAO dao = new UserDAO();
-        return dao.validateUser(username, password);
+    // Original — keep this
+    public AuthService() {
+        this.userDAO = new UserDAO();
+    }
+
+    // NEW — for testing only
+    public AuthService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public String login(String username, String password) {
+        return userDAO.validateUser(username, password);
     }
 }
