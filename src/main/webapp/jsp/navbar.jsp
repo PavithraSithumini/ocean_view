@@ -62,7 +62,7 @@
 <div class="navbar">
 
   <div class="logo">
-    <img src="<%=request.getContextPath()%>/images/logo.png">
+    
     Ocean View Resort
   </div>
 
