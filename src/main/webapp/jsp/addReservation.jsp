@@ -14,10 +14,56 @@
 <html>
 <head>
     <title>Add Reservation - Ocean View Resort</title>
+
     <style>
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #023e8a, #0077b6, #00b4d8);
+            color: white;
+            font-family: Arial;
+        }
+
+        .navbar .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: #ffd60a;
+            color: #023e8a;
+        }
+
+        .navbar .logout {
+            background-color: #ff6b6b;
+        }
+
+        .navbar .logout:hover {
+            background-color: #e63946;
+        }
+
+        /* Page Styles */
         body { font-family: Arial; background: linear-gradient(to right,#0077b6,#00b4d8); margin:0; }
         .container { width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
-        h2 { text-align:center; color:#0077b6; }
+        h2 { text-align:center; color:#0077b6; margin-bottom: 25px; }
         label { font-weight:bold; }
         input, select { width:100%; padding:10px; margin-bottom:18px; border-radius:6px; border:1px solid #ccc; }
         button { width:100%; padding:12px; border:none; background:#0077b6; color:white; border-radius:6px; font-size:16px; cursor:pointer; }
@@ -26,10 +72,21 @@
     </style>
 </head>
 <body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">
+        Ocean View Resort
+    </div>
+    <div class="nav-links">
+        <a href="<%=request.getContextPath()%>/jsp/inadminDashboard.jsp">Dashboard</a>
+        <a class="logout" href="<%=request.getContextPath()%>/logout">Logout</a>
+    </div>
+</div>
+
+<!-- Add Reservation Form -->
 <div class="container">
     <h2>Add Reservation</h2>
-
-    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 
     <% if(request.getParameter("success") != null){ %>
     <p class="success"><%= request.getParameter("success") %></p>
@@ -58,7 +115,7 @@
             <%
                     }
                 } catch(Exception e){
-
+                    out.println("<option disabled>Error loading rooms</option>");
                 }
             %>
         </select>
@@ -72,5 +129,6 @@
         <button type="submit">Add Reservation</button>
     </form>
 </div>
+
 </body>
 </html>
