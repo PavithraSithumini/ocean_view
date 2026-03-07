@@ -109,7 +109,18 @@ public class ReservationDAO {
         }
     }
 
-    public double getPricePerNight(String roomType) {
+    public double getPricePerNight(String roomType) throws Exception {
+        String sql = "SELECT pricePerNight FROM rooms WHERE roomType = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, roomType);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("pricePerNight");
+                }
+            }
+        }
         return 0;
     }
 }
