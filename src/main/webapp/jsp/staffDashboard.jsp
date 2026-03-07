@@ -136,7 +136,7 @@
 <div class="navbar">
 
     <div class="logo">
-        <img src="<%=request.getContextPath()%>/images/logo.png">
+
         <span>Ocean View Resort</span>
     </div>
 
