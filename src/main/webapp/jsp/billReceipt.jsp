@@ -128,6 +128,15 @@
         <span>$<%= bill.getTotal() %></span>
     </div>
 
+    <% if(bill == null){ %>
+    <div style="text-align:center; color:red; margin-top:30px;">
+        <h3>Error: Could not generate bill. Please go back and try again.</h3>
+        <a href="javascript:history.back()">← Go Back</a>
+    </div>
+    <% } else { %>
+    <%-- ... all your existing receipt rows ... --%>
+    <% } %>
+
     <button onclick="printReceipt()">Print Receipt</button>
 </div>
 
