@@ -9,17 +9,30 @@ public class BillDAO {
 
     public void saveBill(Bill bill) throws Exception {
 
-        Connection con = DBConnection.getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
 
-        String sql = "INSERT INTO bills(reservation_id,nights,room_price,total) VALUES(?,?,?,?)";
+        try {
+            con = DBConnection.getConnection();
 
-        PreparedStatement ps = con.prepareStatement(sql);
+            // ✅ Correct table: bill (not bills)
+            // ✅ No bill_id — it is AUTO_INCREMENT
+            String sql = "INSERT INTO bill (idaddreservation, roomType, price_per_night, nights, total) " +
+                    "VALUES (?, ?, ?, ?, ?)";
 
-        ps.setInt(1, bill.getReservationId());
-        ps.setInt(2, bill.getNights());
-        ps.setDouble(3, bill.getRoomPrice());
-        ps.setDouble(4, bill.getTotal());
+            ps = con.prepareStatement(sql);
 
-        ps.executeUpdate();
+            ps.setInt(1, bill.getReservationId());     // idaddreservation
+            ps.setString(2, bill.getRoomType());       // roomType
+            ps.setDouble(3, bill.getPricePerNight());  // price_per_night
+            ps.setInt(4, bill.getNights());            // nights
+            ps.setDouble(5, bill.getTotal());          // total
+
+            ps.executeUpdate();
+
+        } finally {
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        }
     }
 }

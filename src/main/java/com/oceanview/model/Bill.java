@@ -40,6 +40,7 @@ public class Bill {
     public void setTotal(double total) { this.total = total; }
 
     public double getRoomPrice() {
-        return 0;
+        return pricePerNight; // was: return 0;
+
     }
 }

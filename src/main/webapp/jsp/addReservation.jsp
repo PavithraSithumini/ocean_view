@@ -114,10 +114,9 @@
             <option value="<%= r.getRoomType() %>"><%= r.getRoomType() %> ($<%= r.getPricePerNight() %>)</option>
             <%
                     }
-                } catch(Exception e){
-                    out.println("<option disabled>Error loading rooms</option>");
-                }
-            %>
+            } catch(Exception e){ %>
+            <option disabled>Error loading rooms</option>
+            <% } %>
         </select>
 
         <label>Check-in Date</label>
