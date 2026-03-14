@@ -123,15 +123,10 @@
 <%@ include file="navbar.jsp" %>
 
 <!-- WELCOME HERO -->
-
 <div class="hero">
-
-    <h1>Welcome <%=session.getAttribute("user")%> 👋</h1>
-
+    <h1>Admin Dashboard - <%=session.getAttribute("user")%></h1>
     <p>You are logged in as <b><%=session.getAttribute("role")%></b></p>
-
     <p>Manage reservations, rooms and billing easily with the Ocean View Resort system.</p>
-
 </div>
 
 
