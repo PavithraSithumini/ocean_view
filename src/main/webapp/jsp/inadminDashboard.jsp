@@ -1,31 +1,25 @@
 <%@ page session="true" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%
+    if(session.getAttribute("user") == null){
+        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        return;
+    }
+%>
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Ocean View Resort - Admin Dashboard</title>
 
-    ```
-    <%
-        // Redirect to login if session not available
-        if(session.getAttribute("user") == null){
-            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
-            return;
-        }
-    %>
-
     <style>
 
-        /* BODY */
         body{
             margin:0;
             font-family: Arial, sans-serif;
             background: linear-gradient(to right,#0077b6,#00b4d8);
         }
 
-        /* NAVBAR */
         .navbar{
             background:#023e8a;
             color:white;
@@ -39,7 +33,6 @@
             margin:0;
         }
 
-        /* LOGOUT BUTTON */
         .logout-btn{
             background:#e63946;
             color:white;
@@ -52,20 +45,17 @@
             background:#b5172e;
         }
 
-        /* CONTAINER */
         .container{
             padding:40px;
             text-align:center;
         }
 
-        /* WELCOME TEXT */
         .welcome{
             font-size:22px;
             color:white;
             margin-bottom:30px;
         }
 
-        /* CARD AREA */
         .card-container{
             display:flex;
             justify-content:center;
@@ -73,7 +63,6 @@
             gap:30px;
         }
 
-        /* CARD */
         .card{
             background:white;
             width:220px;
@@ -107,30 +96,20 @@
         }
 
     </style>
-    ```
 
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-
 <div class="navbar">
     <h2>Ocean View Resort - Admin Panel</h2>
-
-    ```
-    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">
-        Logout
-    </a>
-    ```
-
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 </div>
 
 <!-- MAIN CONTENT -->
-
 <div class="container">
 
-    ```
     <!-- WELCOME MESSAGE -->
     <div class="welcome">
         Welcome Admin: <b><%= session.getAttribute("user") %></b>
@@ -170,7 +149,6 @@
         </div>
 
     </div>
-    ```
 
 </div>
 

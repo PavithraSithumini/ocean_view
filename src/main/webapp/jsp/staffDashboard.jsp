@@ -164,7 +164,7 @@
 
 <div class="hero">
 
-    <h1>Welcome <%=session.getAttribute("user")%> 👋</h1>
+    <h1>Welcome <%=session.getAttribute("user")%> </h1>
 
     <p>You are logged in as <b>Staff</b></p>
 
